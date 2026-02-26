@@ -1,0 +1,8 @@
+services:
+  app:
+    image: analytic-api:v1
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    ports:
+      - "8000:8000"
