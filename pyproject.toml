@@ -6,10 +6,14 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.133.1",
+    "dotenv",
     "uvicorn",
     "gunicorn",
     "timescaledb",
     "sqlmodel",
     "pydantic",
-    "sqlalchemy"
+    "sqlalchemy",
+    "requests>=2.32.5",
+    "imagekitio>=5.2.0",
+    "aiosqlite>=0.22.1",
 ]
