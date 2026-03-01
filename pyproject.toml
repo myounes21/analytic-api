@@ -16,4 +16,6 @@ dependencies = [
     "requests>=2.32.5",
     "imagekitio>=5.2.0",
     "aiosqlite>=0.22.1",
+    "ipykernel>=7.2.0",
+    "jupyter>=1.1.1",
 ]
