@@ -6,7 +6,5 @@ app.include_router(event_router, prefix="/api/events")
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
-
-
+    return {"status": "ok"}
 
