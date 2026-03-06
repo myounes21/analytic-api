@@ -1,5 +1,7 @@
 #!/bin/bash
-cd /src
-RUN_PORT=${PORT:-8000}
+set -e
+
+RUN_PORT=${PORT:-8002}
 RUN_HOST=${HOST:-0.0.0.0}
-uv run gunicorn -k uvicorn.workers.UvicornWorker -b $RUN_HOST:$RUN_PORT main:app --reload
+
+exec uvicorn main:app --host $RUN_HOST --port $RUN_PORT

@@ -1,8 +1,44 @@
 services:
   app:
-    image: analytic-api:v1
+    image: analytics-api:v1
     build:
       context: .
       dockerfile: Dockerfile.web
+    env_file:
+      - .env
     ports:
-      - "8000:8000"
+      - "8002:8002"
+    volumes:
+      - .:/app:rw
+      - app_venv:/app/.venv
+    depends_on:
+      db_service:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: rebuild
+          path: Dockerfile.web
+        - action: rebuild
+          path: pyproject.toml
+        - action: rebuild
+          path: uv.lock
+
+  db_service:
+    image: timescale/timescaledb:latest-pg17
+    environment:
+      - POSTGRES_USER=time-user
+      - POSTGRES_PASSWORD=time-pw
+      - POSTGRES_DB=timescaledb
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+    healthcheck: # ← is this here?
+      test: [ "CMD-SHELL", "pg_isready -U time-user -d timescaledb" ]
+      interval: 5s
+      retries: 5
+
+
+volumes:
+  timescaledb_data:
+  app_venv:
