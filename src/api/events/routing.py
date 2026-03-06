@@ -21,7 +21,6 @@ def read_events(session: Session = Depends(get_session)):
         "count":len(results)
     }
 
-
 @router.post("/", response_model=EventModel)
 def create_event(
         payload:EventCreateSchema,
@@ -36,13 +35,35 @@ def create_event(
 
 
 @router.put("/{event_id}", response_model=EventModel)
-def update_event(event_id:int, payload:EventUpdateSchema):
-    print(payload)
+def update_event(
+        event_id:int,
+        payload:EventUpdateSchema,
+        session: Session = Depends(get_session)
+):
+    query = select(EventModel).where(EventModel.id == event_id)
+    obj = session.exec(query).first()
+
     data = payload.model_dump()
-    return {
-        "id": event_id,
-        **data
-    }
+    for k, v in data.items():
+        setattr(obj, k, v)
+
+    session.add(obj)
+    session.commit()
+    session.refresh(obj)
+    return obj
+
+@router.get("/{event_id}", response_model=EventModel)
+def get_event(
+        event_id: int,
+        session: Session = Depends(get_session)
+):
+    query = select(EventModel).where(EventModel.id == event_id)
+    result = session.exec(query).first()
+    return result
+
+
+
+
 
 @router.get("/test")
 def read_events():
