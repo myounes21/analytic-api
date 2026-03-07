@@ -16,6 +16,9 @@ services:
         condition: service_healthy
     develop:
       watch:
+        - action: sync+restart
+          path: ./src
+          target: /app/src
         - action: rebuild
           path: Dockerfile.web
         - action: rebuild

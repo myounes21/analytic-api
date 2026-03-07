@@ -27,8 +27,9 @@ def create_event(
         payload:EventCreateSchema,
         session: Session = Depends(get_session)
 ):
-    print(payload.page)
+
     obj = EventModel.model_validate(payload)
+
     session.add(obj)
     session.commit()
     session.refresh(obj)
@@ -52,6 +53,7 @@ def update_event(
     session.add(obj)
     session.commit()
     session.refresh(obj)
+
     return obj
 
 
@@ -69,7 +71,22 @@ def get_event(
     return result
 
 
+@router.delete("/{event_id}")
+def delete_event(
+        event_id:int,
+        session: Session = Depends(get_session)
+):
+    query = select(EventModel).where(EventModel.id == event_id)
+    obj = session.exec(query).first()
+    if obj is None:
+        raise HTTPException(status_code=404, detail="Event not found")
 
+    session.delete(obj)
+    session.commit()
+
+    print("Deleted!")
+
+    return {"ok": True}
 
 # @router.get("/test")
 # def read_events_test():
