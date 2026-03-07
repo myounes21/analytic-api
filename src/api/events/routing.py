@@ -5,7 +5,8 @@ from .models import (
     EventModel,
     EventListSchema,
     EventCreateSchema,
-    EventUpdateSchema
+    EventUpdateSchema,
+    get_utc_now
 )
 import os
 from ..db.session import get_session
@@ -47,6 +48,7 @@ def update_event(
     for k, v in data.items():
         setattr(obj, k, v)
 
+    obj.updated_at = get_utc_now()
     session.add(obj)
     session.commit()
     session.refresh(obj)

@@ -16,6 +16,10 @@ class EventModel(SQLModel, table=True):
         default_factory=get_utc_now,
         sa_column=Column(sqlmodel.DateTime(timezone=True), nullable=False)
     )
+    updated_at: datetime = Field(
+        default_factory=get_utc_now,
+        sa_column=Column(sqlmodel.DateTime(timezone=True), nullable=False)
+    )
 
 class EventCreateSchema(SQLModel):
     page: str
