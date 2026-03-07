@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from fastapi.routing import APIRouter
 from sqlmodel import Session, select
 from .models import (
@@ -38,7 +38,7 @@ def create_event(
 def update_event(
         event_id:int,
         payload:EventUpdateSchema,
-        session: Session = Depends(get_session)
+        session: Session =  Depends(get_session)
 ):
     query = select(EventModel).where(EventModel.id == event_id)
     obj = session.exec(query).first()
@@ -52,6 +52,7 @@ def update_event(
     session.refresh(obj)
     return obj
 
+
 @router.get("/{event_id}", response_model=EventModel)
 def get_event(
         event_id: int,
@@ -59,18 +60,17 @@ def get_event(
 ):
     query = select(EventModel).where(EventModel.id == event_id)
     result = session.exec(query).first()
+    if result is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    print(f"id {event_id}, done!")
     return result
 
 
 
 
-
-@router.get("/test")
-def read_events():
-    print(os.environ.get("DATABASE_URL"))
-    print("done!")
-    return {
-        "ok"
-    }
-
-
+# @router.get("/test")
+# def read_events_test():
+#     print(os.environ.get("DATABASE_URL"))
+#     print("done!")
+#     return {"ok"}
