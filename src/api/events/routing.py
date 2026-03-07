@@ -87,9 +87,3 @@ def delete_event(
     print("Deleted!")
 
     return {"ok": True}
-
-# @router.get("/test")
-# def read_events_test():
-#     print(os.environ.get("DATABASE_URL"))
-#     print("done!")
-#     return {"ok"}

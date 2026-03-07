@@ -1,6 +1,7 @@
 import sqlmodel
 from sqlmodel import SQLModel, Session
 from .config import DATABASE_URL
+import timescaledb
 
 engine = sqlmodel.create_engine(DATABASE_URL)
 
@@ -10,6 +11,8 @@ if DATABASE_URL == "":
 def init_db():
     print("create database")
     SQLModel.metadata.create_all(engine)
+    print("creating hypertables")
+    timescaledb.metadata.create_all(engine)
 
 
 def get_session():
